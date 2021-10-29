@@ -1,0 +1,9 @@
+.login-form {
+	width: 500px;
+	margin: auto;
+	text-align: center;
+}
+
+.login-form .error {
+	border: 1px solid red;
+}
