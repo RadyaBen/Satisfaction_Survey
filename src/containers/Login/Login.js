@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import FormErrors from '../../components/FormErrors';
 import { login } from '../../redux/actions/authentication';
 import { connect } from 'react-redux';
 import './Login.css';

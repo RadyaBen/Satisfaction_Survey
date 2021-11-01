@@ -1,218 +1,200 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { addSurvey } from '../../redux/actions/surveyList';
 
 import './CreateSurvey.css';
 
-class CreateSurvey extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			isPublished: false,
-			title: null,
-			question: '',
-			questionList: [],
-			createdBy: null,
-			formErrors: '',
-			questionError: ''
-		};
-	}
+const CreateSurvey = ({ addSurvey, history }) => {
+	const [inputValues, setInputValues] = useState({ title: '', question: '', createdBy: '' });
+	const [isPublished, setIsPublished] = useState(false);
+	const [questionList, setQuestionList] = useState([]);
+	const [formErrors, setFormErrors] = useState('');
+	const [questionError, setQuestionError] = useState('');
 
-	handleInputChange = (e) => {
+	const handleInputChange = (e) => {
 		const { name, value } = e.target;
-		this.setState({
+		setInputValues({
+			...inputValues,
 			[name]: value
 		});
 	}
 
-	handleIsPublishedCheckbox = (e) => {
-		this.setState({
-			isPublished: e.target.checked
-		});
+	const handleIsPublishedCheckbox = (e) => {
+		setIsPublished({ isPublished: e.target.checked });
 	}
 
-	isCreateFormValid = () => {
-		const { title, questionList } = this.state;
-		const errorTitleMessage = "Please, enter a title which doesn't empty and has less than 6 characters.";//TODO move all validation messages from all the project to constatnts
+	const isCreateFormValid = () => {
+		const errorTitleMessage = "Please, enter a title which doesn't empty and has less than 6 characters.";
 		const errorQuestionsMessage = "Please, add at least 2 questions to create this survey.";
 
-		if (!title || title.length < 6) {
-			this.setState({
-				formErrors: errorTitleMessage
-			});
+		if (!inputValues.title || inputValues.title.length < 6) {
+			setFormErrors(errorTitleMessage);
 			return false;
-		} else if(!questionList || questionList.length < 2) {
-			this.setState({
-				formErrors: errorQuestionsMessage
-			});
+		} else if (!questionList || questionList.length < 2) {
+			setFormErrors(errorQuestionsMessage);
 			return false;
 		} else {
-			this.setState({
-				formErrors: ''
-			});
+			setFormErrors('');
 			return true;
 		}
 	}
 
-	isSurveyQuestionValid = () => {
-		const { question } = this.state;
-		const errorQuestionMessage = "Please, enter a question which doesn't empty and has less than 10 characters";
-		if (!question || question.length < 10) {
-			this.setState({
-				questionError: errorQuestionMessage,
-			});
+	const isSurveyQuestionValid = () => {
+		const errorQuestionMessage = "Please, enter a question which doesn't empty and has less than 10 characters.";
+		if (!inputValues.question || inputValues.question.length < 10) {
+			setQuestionError(errorQuestionMessage);
 			return false;
+		} else if (questionList.length >= 1) {
+			setFormErrors('');
+			return true;
 		} else {
-			this.setState({
-				questionError: ''
-			});
+			setQuestionError('');
 			return true;
 		}
 	}
 
-	addQuestion = () => {
-		if(!this.isSurveyQuestionValid())
+	const addQuestion = () => {
+		if (!isSurveyQuestionValid())
 			return;
-
-		const { question, questionList } = this.state;
+		
 		const key = Math.random().toString(36).substr(2, 10);
-
-		this.setState({
-			questionList: [...questionList, { id: key, question }],
+		
+		setQuestionList([
+			...questionList, {
+				id: key,
+				question: inputValues.question
+			}
+		]);
+		
+		setInputValues({
+			...inputValues,
 			question: ''
 		});
 	}
 
-	renderQuestionList = () => {
-		const list =  this.state.questionList
-			.map((item) => {
-				return (
-					<ul key={item.id}>
-						<li>
-							{item.question}
-						</li>
-					</ul>
-				)
-			});
+	const renderQuestionList = () => {
+		const list = questionList.map((item) => {
+			return (
+				<ul key={item.id}>
+					<li >
+						{item.question}
+					</li>
+				</ul>
+			)
+		})
 		return list;
 	}
 
-	createSurvey = () => {
-		if(!this.isCreateFormValid())
+	const createSurvey = () => {
+		if (!isCreateFormValid())
 			return;
 
-		const { title, createdBy, isPublished, questionList } = this.state;
-
-		this.props.addSurvey({
+		addSurvey({
 			id: Math.random().toString(36).substr(2, 10),
-			title,
-			createdBy,
+			title: inputValues.title,
+			createdBy: inputValues.createdBy,
 			questionList,
 			isPublished,
-			createDate: new Date().toUTCString()
+			createDate: new Date().toLocaleDateString()
 		});
-		this.redirectToSurveyPage();
+		redirectToSurveyPage();
 	}
 
-	redirectToSurveyPage = () => {
-		this.props.history.push("/");
+	const redirectToSurveyPage = () => {
+		history.push("/");
 	}
 
-	render() {
-		const { title, createdBy, isPublished, question, formErrors, questionError } = this.state;
+	return (
+		<div className='main'>
+			<div className="error-block-id" style={{ color: "red" }}>{formErrors}</div>
 
-		return (
-			<div className='main'>
-				<div className="error-block-id" style={{ color: "red" }}>{ formErrors }</div>
-
-				<form method="post">
-					<div className="field">
-						<div>
-							<label className="title" htmlFor="form-control">Survey Title</label>
-						</div>
-						<div>
-							<input
-								type="text"
-								name="title"
-								className="form-control"
-								maxLength="100"
-								placeholder="Enter title"
-								value={title}
-								style={{ width: "300px" }}
-								onChange={this.handleInputChange} />
-
-							<div className="checkbox">
-								<label>
-									<input
-										type="checkbox"
-										name="isPublished"
-										checked={isPublished}
-										onChange={this.handleIsPublishedCheckbox}
-									/> Is Published
-								</label>
-							</div>
-						</div>
-					</div>
-					<div className="field">
-						<div>
-							<label className="question" htmlFor="form-control">Question</label>
-						</div>
-						<div>
-							<input
-								type="text"
-								name="question"
-								className="form-control"
-								maxLength="100"
-								placeholder="Enter question"
-								value={question}
-								style={{ width: "300px" }}
-								onChange={this.handleInputChange} />
-							<div className="error-block-id" style={{ color: "red" }}>{questionError}</div>
-						</div>
-						<div>
-							<button
-								type="button"
-								className="btn btn-primary"
-								onClick={this.addQuestion}
-							> +
-							</button>
-						</div>
+			<form method="post">
+				<div className="field">
+					<div>
+						<label className="title" htmlFor="form-control">Survey Title</label>
 					</div>
 					<div>
-						{this.renderQuestionList()}
-					</div>
-					<div className="field">
-						<div><label className="username" htmlFor="form-control">Your name</label></div>
-						<div>
-							<input
-								type="text"
-								name="createdBy"
-								className="form-control"
-								maxLength="100"
-								placeholder="Enter your name"
-								value={createdBy}
-								style={{ width: "300px" }}
-								onChange={this.handleInputChange} />
+						<input
+							type="text"
+							name="title"
+							className="form-control"
+							maxLength="100"
+							placeholder="Enter title"
+							value={inputValues.title}
+							style={{ width: "300px" }}
+							onChange={handleInputChange} />
+
+						<div className="checkbox">
+							<label>
+								<input
+									type="checkbox"
+									name="isPublished"
+									checked={isPublished}
+									onChange={handleIsPublishedCheckbox}
+								/> Is Published
+								</label>
 						</div>
 					</div>
-					<div className="right-buttons">
-						<button
-							type="button"
-							className="btn btn-light button-margin"
-							onClick={() => this.redirectToSurveyPage()}
-						> Cancel
-						</button>
+				</div>
+				<div className="field">
+					<div>
+						<label className="question" htmlFor="form-control">Question</label>
+					</div>
+					<div>
+						<input
+							type="text"
+							name="question"
+							className="form-control"
+							maxLength="100"
+							placeholder="Enter question"
+							value={inputValues.question}
+							style={{ width: "300px" }}
+							onChange={handleInputChange} />
+						<div className="error-block-id" style={{ color: "red" }}>{questionError}</div>
+					</div>
+					<div>
 						<button
 							type="button"
 							className="btn btn-primary"
-							onClick={() => this.createSurvey()}
-						> Create Survey
+							onClick={() => addQuestion()}
+						> +
 						</button>
 					</div>
-				</form>
-			</div>
-		)
-	}
+				</div>
+				<div>
+					{renderQuestionList()}
+				</div>
+				<div className="field">
+					<div><label className="username" htmlFor="form-control">Your name</label></div>
+					<div>
+						<input
+							type="text"
+							name="createdBy"
+							className="form-control"
+							maxLength="100"
+							placeholder="Enter your name"
+							value={inputValues.createdBy}
+							style={{ width: "300px" }}
+							onChange={handleInputChange} />
+					</div>
+				</div>
+				<div className="right-buttons">
+					<button
+						type="button"
+						className="btn btn-light button-margin"
+						onClick={() => redirectToSurveyPage()}
+					> Cancel
+					</button>
+					<button
+						type="button"
+						className="btn btn-primary"
+						onClick={() => createSurvey()}
+					> Create Survey
+					</button>
+				</div>
+			</form>
+		</div>
+	)
 }
 
 const mapStateToProps = (state) => {
