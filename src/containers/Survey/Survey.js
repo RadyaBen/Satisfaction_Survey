@@ -1,15 +1,15 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { saveSurveyResult } from '../../redux/actions/surveyResults';
 
-const Survey = ({ surveyList, user, saveSurveyResult, history, match }) => {
+const Survey = ({ surveyList, saveSurveyResult, history, match }) => {
 
 	const [formError, setFormError] = useState('');
 	const [questions, setQuestions] = useState([]);
 	const [answers, setAnswers] = useState([]);
 
 	useEffect(() => {
-		if(questions.length > 0 || !surveyList)
+		if (questions.length > 0 || !surveyList)
 			return;
 
 		const surveyId = match.params.id;
@@ -25,7 +25,7 @@ const Survey = ({ surveyList, user, saveSurveyResult, history, match }) => {
 
 		setQuestions(survey.questionList.map((question) => question));
 		setAnswers(answers);
-	  }, [surveyList]);
+	}, [surveyList, match.params.id, questions.length]);
 
 	const handleAnswerChange = (e, index) => {
 		const { value } = e.target;
@@ -37,24 +37,29 @@ const Survey = ({ surveyList, user, saveSurveyResult, history, match }) => {
 	}
 
 	const isAllAnswersValid = () => {
-		if(answers.filter(a => !a.answer).length > 0) {
+		if (answers.filter(a => !a.answer).length > 0) {
 			setFormError("Please, asnwer all questions.");
 			return false;
 		} else {
-			setFormError("");
+			setFormError('');
 			return true;
 		}
 	}
 
 	const saveAnswers = () => {
-		if(!isAllAnswersValid())
+		if (!isAllAnswersValid())
 			return;
 
-		saveSurveyResult({
-			answers: answers,
-			username: user.username,
-			createDate: new Date().toUTCString()
-		});
+		const list = surveyList;
+		const keys = Object.keys(list);
+		for (const key of keys) {
+			saveSurveyResult({
+				answers: answers,
+				username: list[key].createdBy,
+				createDate: list[key].createDate
+			});
+		}
+
 		alert('Thank you for your time.');
 		history.push('/');
 	}
@@ -98,7 +103,6 @@ const Survey = ({ surveyList, user, saveSurveyResult, history, match }) => {
 const mapStateToProps = (state) => {
 	return {
 		surveyList: state.surveyList.surveyList,
-		user: state.authentication.user
 	};
 }
 

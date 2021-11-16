@@ -1,11 +1,11 @@
 import React from 'react';
 import SurveyItemButtons from '../SurveyItemButtons';
 
-const SurveyListItem = ({ item, showDeleteButton, onSurveyRemoveClick, onViewSurveyClick }) => {
+const SurveyListItem = ({ item, id, showDeleteButton, onSurveyRemoveClick, onViewSurveyClick }) => {
 	return (
 		<React.Fragment>
 			<tr className='element'>
-				<td>{item.id}</td>
+				<td>{id}</td>
 				<td>{item.title}</td>
 				<td>{item.createDate}</td>
 				<td>{item.createdBy}</td>

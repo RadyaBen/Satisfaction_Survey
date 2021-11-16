@@ -21,4 +21,7 @@ const saveSurveyResult = (data) => {
 
 }
 
-export { saveSurveyResultSuccess, saveSurveyResult };
+export { 
+	saveSurveyResultSuccess, 
+	saveSurveyResult 
+};

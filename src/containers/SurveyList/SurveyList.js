@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import SurveyListItem from '../../components/SurveyListItem'; 
 import { Table } from "react-bootstrap";
 import { connect } from 'react-redux';
@@ -27,6 +27,7 @@ const SurveyList = ({ isUserAdmin, surveyList, deleteSurvey, history }) => {
 			return (
 				<SurveyListItem
 					key={key}
+					id={'Q' + (index + 1)}
 					item={item}
 					showDeleteButton={isUserAdmin}
 					onSurveyRemoveClick={() => handleDeleteSurvey(item)}
