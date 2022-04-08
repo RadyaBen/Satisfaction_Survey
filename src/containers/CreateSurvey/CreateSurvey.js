@@ -123,7 +123,7 @@ const CreateSurvey = ({ addSurvey, history }) => {
 							value={inputValues.title}
 							style={{ width: "300px" }}
 							onChange={handleInputChange} />
-
+						
 						<div className="checkbox">
 							<label>
 								<input
@@ -132,7 +132,7 @@ const CreateSurvey = ({ addSurvey, history }) => {
 									checked={isPublished}
 									onChange={handleIsPublishedCheckbox}
 								/> Is Published
-								</label>
+							</label>
 						</div>
 					</div>
 				</div>

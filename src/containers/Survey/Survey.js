@@ -38,7 +38,7 @@ const Survey = ({ surveyList, saveSurveyResult, history, match }) => {
 
 	const isAllAnswersValid = () => {
 		if (answers.filter(a => !a.answer).length > 0) {
-			setFormError("Please, asnwer all questions.");
+			setFormError("Please, answer all questions.");
 			return false;
 		} else {
 			setFormError('');
