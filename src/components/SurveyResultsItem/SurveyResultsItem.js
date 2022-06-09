@@ -1,18 +1,23 @@
 import React from 'react';
+
 import SurveyResultsButton from '../SurveyResultsButton';
 
+import TableRow from "@material-ui/core/TableRow";
+import TableCell from "@material-ui/core/TableCell";
+
 const SurveyResultsItem = ({ id, username, createDate, onViewAnswerClick }) => {
+
 	return (
-		<React.Fragment>
-			<tr className='element'>
-				<td>{id}</td>
-				<td>{username}</td>
-				<td>{createDate}</td>
-				<td>
+		<>
+			<TableRow className='element'>
+				<TableCell>{id}</TableCell>
+				<TableCell>{username}</TableCell>
+				<TableCell>{createDate}</TableCell>
+				<TableCell>
 					<SurveyResultsButton onViewAnswerClick={onViewAnswerClick} />
-				</td>
-			</tr>
-		</React.Fragment>
+				</TableCell>
+			</TableRow>
+		</>
 	);
 }
 

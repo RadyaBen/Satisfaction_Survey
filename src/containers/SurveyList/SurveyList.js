@@ -1,10 +1,33 @@
 import React from 'react';
-import SurveyListItem from '../../components/SurveyListItem'; 
-import { Table } from "react-bootstrap";
 import { connect } from 'react-redux';
+
+import SurveyListItem from '../../components/SurveyListItem';
 import { deleteSurvey } from '../../redux/actions/surveyList';
 
-import './SurveyList.css';
+import {
+	makeStyles,
+	TableContainer,
+	TableBody,
+	TableRow,
+	Paper,
+	Table,
+	TableHead,
+	TableCell
+} from '@material-ui/core';
+
+const useStyles = makeStyles({
+	table: {
+		border: "1px solid #ddd"
+	},
+	tableHead: {
+		backgroundColor: "#9FA8DA"
+	},
+	tableCell: {
+		border: "1px solid #ddd",
+		fontSize: 15,
+		textAlign: "center"
+	}
+});
 
 const SurveyList = ({ isUserAdmin, surveyList, deleteSurvey, history }) => {
 
@@ -38,25 +61,28 @@ const SurveyList = ({ isUserAdmin, surveyList, deleteSurvey, history }) => {
 		return list;
 	}
 
+	const classes = useStyles();
+
 	return (
-		<div className='styled-table'>
-			<h1>Survey List</h1>
-			<Table striped bordered hover>
-				<thead className='thead'>
-					<tr>
-						<th>ID</th>
-						<th>TITLE</th>
-						<th>CREATE DATE</th>
-						<th>CREATED BY</th>
-						<th>ACTIONS</th>
-					</tr>
-				</thead>
-				<tbody>
-					{renderSurveyListElements()}
-				</tbody>
-			</Table>
-		</div>
-	)
+		<>
+			<TableContainer style={{ margin: "16px 0px" }} component={Paper} >
+				<Table className={classes.table}>
+					<TableHead className={classes.tableHead}>
+						<TableRow>
+							<TableCell className={classes.tableCell}>ID</TableCell>
+							<TableCell className={classes.tableCell}>TITLE</TableCell>
+							<TableCell className={classes.tableCell}>CREATE DATE</TableCell>
+							<TableCell className={classes.tableCell}>CREATED BY</TableCell>
+							<TableCell className={classes.tableCell}>ACTIONS</TableCell>
+						</TableRow>
+					</TableHead>
+					<TableBody>
+						{renderSurveyListElements()}
+					</TableBody>
+				</Table>
+			</TableContainer>
+		</>
+	);
 }
 
 const mapStateToProps = (state) => {

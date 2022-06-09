@@ -1,21 +1,30 @@
 import React from 'react';
 
+import { Button } from '@material-ui/core';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+
 const SurveyItemButtons = ({ showDeleteButton, onSurveyRemoveClick, onViewSurveyClick }) => {
+
 	return (
-		<React.Fragment>
+		<>
 			{showDeleteButton &&
-				<button
-					className='btn btn-primary button-1'
+				<Button
+					size='large'
+					color='secondary'
 					onClick={onSurveyRemoveClick}
+					startIcon={<DeleteOutlineIcon />}
 				> Remove
-				</button>
+				</Button>
 			}
-			<button
-				className='btn btn-primary button-2'
+			<Button
+				size='large'
+				color='primary'
 				onClick={onViewSurveyClick}
-			> View Survey
-			</button>
-		</React.Fragment>
+				startIcon={<VisibilityIcon />}
+			> View
+			</Button>
+		</>
 	);
 }
 
