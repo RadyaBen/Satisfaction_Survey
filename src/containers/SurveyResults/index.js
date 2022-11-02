@@ -1,2 +1,1 @@
-import SurveyResults from './SurveyResults';
-export default SurveyResults;
+export { SurveyResults } from './SurveyResults';

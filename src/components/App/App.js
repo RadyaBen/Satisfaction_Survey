@@ -8,7 +8,7 @@ import Login from '../../containers/Login';
 import CreateSurvey from '../../containers/CreateSurvey';
 import SurveyList from '../../containers/SurveyList';
 import Survey from '../../containers/Survey';
-import SurveyResults from '../../containers/SurveyResults';
+import { SurveyResults } from '../../containers/SurveyResults';
 import ViewAnswers from '../../containers/ViewAnswers';
 
 const App = () => {
