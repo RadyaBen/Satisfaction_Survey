@@ -7,7 +7,6 @@ import App from './components/App';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap-theme.css';
 import './style.css';
-// import '../src/components/';
 
 const store = configureStore();
 
