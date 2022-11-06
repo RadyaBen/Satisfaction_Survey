@@ -1,35 +1,22 @@
-import React from 'react';
 import { connect } from 'react-redux';
-
-import SurveyListItem from '../../components/SurveyListItem';
-import { deleteSurvey } from '../../redux/actions/surveyList';
-
 import {
-	makeStyles,
-	TableContainer,
-	TableBody,
-	TableRow,
 	Paper,
 	Table,
+	TableBody,
+	TableCell,
+	TableContainer,
 	TableHead,
-	TableCell
+	TableRow
 } from '@material-ui/core';
 
-const useStyles = makeStyles({
-	table: {
-		border: "1px solid #ddd"
-	},
-	tableHead: {
-		backgroundColor: "#9FA8DA"
-	},
-	tableCell: {
-		border: "1px solid #ddd",
-		fontSize: 15,
-		textAlign: "center"
-	}
-});
+import { SurveyEmptyMessage } from '../../components/ui/SurveyEmptyMessage';
+import { SurveyListItem } from '../../components/ui/SurveyListItem';
+import { deleteSurvey } from '../../redux/actions/surveyList';
+
+import { useStyles } from './styles';
 
 const SurveyList = ({ isUserAdmin, surveyList, deleteSurvey, history }) => {
+	const classes = useStyles();
 
 	const handleDeleteSurvey = (item) => {
 		const isConfirmed = window.confirm('Are you sure you want to delete it?');
@@ -38,11 +25,11 @@ const SurveyList = ({ isUserAdmin, surveyList, deleteSurvey, history }) => {
 		} else {
 			alert("Ok, we won't delete it :)");
 		}
-	}
+	};
 
 	const redirectToSurveyPage = (item) => {
 		history.push(`/survey/${item.id}`);
-	}
+	};
 
 	const renderSurveyListElements = () => {
 		const list = surveyList.filter((item) => item.isPublished).map((item, index) => {
@@ -59,31 +46,33 @@ const SurveyList = ({ isUserAdmin, surveyList, deleteSurvey, history }) => {
 			)
 		});
 		return list;
-	}
-
-	const classes = useStyles();
+	};
 
 	return (
 		<>
-			<TableContainer style={{ margin: "16px 0px" }} component={Paper} >
+			<TableContainer className={classes.root} component={Paper} >
 				<Table className={classes.table}>
 					<TableHead className={classes.tableHead}>
 						<TableRow>
-							<TableCell className={classes.tableCell}>ID</TableCell>
-							<TableCell className={classes.tableCell}>TITLE</TableCell>
-							<TableCell className={classes.tableCell}>CREATE DATE</TableCell>
-							<TableCell className={classes.tableCell}>CREATED BY</TableCell>
-							<TableCell className={classes.tableCell}>ACTIONS</TableCell>
+							<TableCell className={classes.tableCell} width='8%'>ID</TableCell>
+							<TableCell className={classes.tableCell} width='32%'>TITLE</TableCell>
+							<TableCell className={classes.tableCell} width='20%'>CREATE DATE</TableCell>
+							<TableCell className={classes.tableCell} width='20%'>CREATED BY</TableCell>
+							<TableCell className={classes.tableCell} width='20%'>ACTIONS</TableCell>
 						</TableRow>
 					</TableHead>
 					<TableBody>
-						{renderSurveyListElements()}
+						{surveyList.length > 0 ? (
+							renderSurveyListElements()
+						) : (
+							<SurveyEmptyMessage message={'No Survey In List Yet'} />
+						)}
 					</TableBody>
 				</Table>
 			</TableContainer>
 		</>
 	);
-}
+};
 
 const mapStateToProps = (state) => {
 	return {
