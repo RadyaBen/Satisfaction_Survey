@@ -1,11 +1,9 @@
-import React from 'react';
-
 import { Button } from '@material-ui/core';
+
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 
 const SurveyItemButtons = ({ showDeleteButton, onSurveyRemoveClick, onViewSurveyClick }) => {
-
 	return (
 		<>
 			{showDeleteButton &&
@@ -14,7 +12,8 @@ const SurveyItemButtons = ({ showDeleteButton, onSurveyRemoveClick, onViewSurvey
 					color='secondary'
 					onClick={onSurveyRemoveClick}
 					startIcon={<DeleteOutlineIcon />}
-				> Remove
+				>
+					Remove
 				</Button>
 			}
 			<Button
@@ -22,10 +21,11 @@ const SurveyItemButtons = ({ showDeleteButton, onSurveyRemoveClick, onViewSurvey
 				color='primary'
 				onClick={onViewSurveyClick}
 				startIcon={<VisibilityIcon />}
-			> View
+			>
+				View
 			</Button>
 		</>
 	);
-}
+};
 
-export default SurveyItemButtons;
+export { SurveyItemButtons };
