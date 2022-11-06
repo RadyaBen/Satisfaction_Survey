@@ -1,15 +1,18 @@
-import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+
 import { addSurvey } from '../../redux/actions/surveyList';
 
 import './CreateSurvey.css';
 
-const CreateSurvey = ({ addSurvey, history }) => {
+const CreateSurvey = ({ history }) => {
 	const [inputValues, setInputValues] = useState({ title: '', question: '', createdBy: '' });
 	const [isPublished, setIsPublished] = useState(false);
 	const [questionList, setQuestionList] = useState([]);
 	const [formErrors, setFormErrors] = useState('');
 	const [questionError, setQuestionError] = useState('');
+
+	const dispatch = useDispatch();
 
 	const handleInputChange = (e) => {
 		const { name, value } = e.target;
@@ -56,16 +59,16 @@ const CreateSurvey = ({ addSurvey, history }) => {
 	const addQuestion = () => {
 		if (!isSurveyQuestionValid())
 			return;
-		
+
 		const key = Math.random().toString(36).substr(2, 10);
-		
+
 		setQuestionList([
 			...questionList, {
 				id: key,
 				question: inputValues.question
 			}
 		]);
-		
+
 		setInputValues({
 			...inputValues,
 			question: ''
@@ -89,14 +92,14 @@ const CreateSurvey = ({ addSurvey, history }) => {
 		if (!isCreateFormValid())
 			return;
 
-		addSurvey({
+		dispatch(addSurvey({
 			id: Math.random().toString(36).substr(2, 10),
 			title: inputValues.title,
 			createdBy: inputValues.createdBy,
 			questionList,
 			isPublished,
 			createDate: new Date().toLocaleDateString()
-		});
+		}));
 		redirectToSurveyPage();
 	}
 
@@ -123,7 +126,7 @@ const CreateSurvey = ({ addSurvey, history }) => {
 							value={inputValues.title}
 							style={{ width: "300px" }}
 							onChange={handleInputChange} />
-						
+
 						<div className="checkbox">
 							<label>
 								<input
@@ -197,16 +200,4 @@ const CreateSurvey = ({ addSurvey, history }) => {
 	)
 }
 
-const mapStateToProps = (state) => {
-	return {
-		surveyList: state.surveyList.surveyList
-	};
-}
-
-const mapDispatchToProps = (dispatch) => {
-	return {
-		addSurvey: (survey) => dispatch(addSurvey(survey))
-	};
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(CreateSurvey);
+export default CreateSurvey;
