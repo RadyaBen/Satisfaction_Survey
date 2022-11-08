@@ -1,4 +1,4 @@
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
 	Paper,
 	Table,
@@ -15,13 +15,17 @@ import { deleteSurvey } from '../../redux/actions/surveyList';
 
 import { useStyles } from './styles';
 
-const SurveyList = ({ isUserAdmin, surveyList, deleteSurvey, history }) => {
+const SurveyList = ({ history }) => {
+	const { surveyList } = useSelector(state => state.surveyList);
+	const { isAdmin } = useSelector(state => state.authentication.user);
+	const dispatch = useDispatch();
+
 	const classes = useStyles();
 
 	const handleDeleteSurvey = (item) => {
 		const isConfirmed = window.confirm('Are you sure you want to delete it?');
 		if (isConfirmed) {
-			deleteSurvey(item);
+			dispatch(deleteSurvey(item));
 		} else {
 			alert("Ok, we won't delete it :)");
 		}
@@ -39,7 +43,7 @@ const SurveyList = ({ isUserAdmin, surveyList, deleteSurvey, history }) => {
 					key={key}
 					id={'Q' + (index + 1)}
 					item={item}
-					showDeleteButton={isUserAdmin}
+					showDeleteButton={isAdmin}
 					onSurveyRemoveClick={() => handleDeleteSurvey(item)}
 					onViewSurveyClick={() => redirectToSurveyPage(item)}
 				/>
@@ -74,19 +78,4 @@ const SurveyList = ({ isUserAdmin, surveyList, deleteSurvey, history }) => {
 	);
 };
 
-const mapStateToProps = (state) => {
-	return {
-		surveyList: state.surveyList.surveyList,
-		isUserAdmin: state.authentication.user.isAdmin
-	};
-}
-
-const mapDispatchToProps = (dispatch) => {
-	return {
-		deleteSurvey: (item) => {
-			dispatch(deleteSurvey(item))
-		},
-	};
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(SurveyList);
+export default SurveyList;

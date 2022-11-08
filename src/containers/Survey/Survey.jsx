@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
 import { saveSurveyResult } from '../../redux/actions/surveyResults';
 
-const Survey = ({ surveyList, saveSurveyResult, history, match }) => {
-
+const Survey = ({ history, match }) => {
 	const [formError, setFormError] = useState('');
 	const [questions, setQuestions] = useState([]);
 	const [answers, setAnswers] = useState([]);
+
+	const { surveyList } = useSelector(state => state.surveyList);
+	const dispatch = useDispatch();
 
 	useEffect(() => {
 		if (questions.length > 0 || !surveyList)
@@ -27,14 +30,14 @@ const Survey = ({ surveyList, saveSurveyResult, history, match }) => {
 		setAnswers(answers);
 	}, [surveyList, match.params.id, questions.length]);
 
-	const handleAnswerChange = (e, index) => {
-		const { value } = e.target;
+	const handleAnswerChange = ({ target }, index) => {
+		const { value } = target;
 
 		const copiedAnswers = answers;
 		copiedAnswers[index].answer = value;
 
 		setAnswers(copiedAnswers);
-	}
+	};
 
 	const isAllAnswersValid = () => {
 		if (answers.filter(a => !a.answer).length > 0) {
@@ -44,7 +47,7 @@ const Survey = ({ surveyList, saveSurveyResult, history, match }) => {
 			setFormError('');
 			return true;
 		}
-	}
+	};
 
 	const saveAnswers = () => {
 		if (!isAllAnswersValid())
@@ -52,21 +55,22 @@ const Survey = ({ surveyList, saveSurveyResult, history, match }) => {
 
 		const list = surveyList;
 		const keys = Object.keys(list);
+		
 		for (const key of keys) {
-			saveSurveyResult({
+			dispatch(saveSurveyResult({
 				answers: answers,
 				username: list[key].createdBy,
 				createDate: list[key].createDate
-			});
+			}));
 		}
 
 		alert('Thank you for your time.');
 		history.push('/');
-	}
+	};
 
 	return (
 		<div>
-			{ formError && (<div style={{ 'color': 'red' }}>{ formError }</div>) }
+			{formError && (<div style={{ 'color': 'red' }}>{formError}</div>)}
 			<div>
 				{questions.map((item, index) => (
 					<div key={index}>
@@ -94,22 +98,11 @@ const Survey = ({ surveyList, saveSurveyResult, history, match }) => {
 			<button
 				className="btn btn-primary"
 				onClick={() => saveAnswers()}
-			> Save Answers
+			>
+				Save Answers
 			</button>
 		</div>
-	)
-}
+	);
+};
 
-const mapStateToProps = (state) => {
-	return {
-		surveyList: state.surveyList.surveyList,
-	};
-}
-
-const mapDispatchToProps = (dispatch) => {
-	return {
-		saveSurveyResult: (data) => dispatch(saveSurveyResult(data))
-	};
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Survey);
+export default Survey;
