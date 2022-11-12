@@ -1,4 +1,5 @@
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import {
 	Paper,
 	Table,
@@ -14,13 +15,15 @@ import { SurveyResultsItem } from '../../components/SurveyResultsItem';
 
 import { useStyles } from './styles';
 
-const SurveyResults = ({ history }) => {
+const SurveyResults = () => {
 	const { results } = useSelector(state => state.surveyResults);
+
+	const navigate = useNavigate();
 
 	const classes = useStyles();
 
 	const redirectToAnswersPage = (item) => {
-		history.push(`/surveyAnswers/${item.surveyId}`);
+		navigate(`/surveyAnswers/${item.surveyId}`);
 	};
 
 	const createSurveyResults = () => {

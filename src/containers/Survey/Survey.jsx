@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { saveSurveyResult } from '../../redux/actions/surveyResults';
 
-const Survey = ({ history, match }) => {
+const Survey = () => {
 	const [formError, setFormError] = useState('');
 	const [questions, setQuestions] = useState([]);
 	const [answers, setAnswers] = useState([]);
@@ -11,15 +12,17 @@ const Survey = ({ history, match }) => {
 	const { surveyList } = useSelector(state => state.surveyList);
 	const dispatch = useDispatch();
 
+	const navigate = useNavigate();
+	const { id } = useParams();
+
 	useEffect(() => {
 		if (questions.length > 0 || !surveyList)
 			return;
 
-		const surveyId = match.params.id;
-		const survey = surveyList.find((survey) => survey.id === surveyId);
+		const survey = surveyList.find((survey) => survey.id === id);
 		const answers = survey.questionList.map((question) => {
 			return {
-				surveyId: surveyId,
+				surveyId: id,
 				id: question.id,
 				question,
 				answer: null,
@@ -28,7 +31,7 @@ const Survey = ({ history, match }) => {
 
 		setQuestions(survey.questionList.map((question) => question));
 		setAnswers(answers);
-	}, [surveyList, match.params.id, questions.length]);
+	}, [surveyList, id, questions.length]);
 
 	const handleAnswerChange = ({ target }, index) => {
 		const { value } = target;
@@ -65,7 +68,7 @@ const Survey = ({ history, match }) => {
 		}
 
 		alert('Thank you for your time.');
-		history.push('/');
+		navigate('/');
 	};
 
 	return (

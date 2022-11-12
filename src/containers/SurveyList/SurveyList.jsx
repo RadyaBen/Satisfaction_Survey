@@ -1,4 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import {
 	Paper,
 	Table,
@@ -15,10 +16,12 @@ import { deleteSurvey } from '../../redux/actions/surveyList';
 
 import { useStyles } from './styles';
 
-const SurveyList = ({ history }) => {
+const SurveyList = () => {
 	const { surveyList } = useSelector(state => state.surveyList);
 	const { isAdmin } = useSelector(state => state.authentication.user);
 	const dispatch = useDispatch();
+
+	const navigate = useNavigate();
 
 	const classes = useStyles();
 
@@ -32,7 +35,7 @@ const SurveyList = ({ history }) => {
 	};
 
 	const redirectToSurveyPage = (item) => {
-		history.push(`/survey/${item.id}`);
+		navigate(`/survey/${item.id}`);
 	};
 
 	const renderSurveyListElements = () => {

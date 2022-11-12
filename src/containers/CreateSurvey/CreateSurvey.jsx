@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 import { addSurvey } from '../../redux/actions/surveyList';
 
 import './CreateSurvey.css';
 
-const CreateSurvey = ({ history }) => {
+const CreateSurvey = () => {
 	const [inputValues, setInputValues] = useState({ title: '', question: '', createdBy: '' });
 	const [isPublished, setIsPublished] = useState(false);
 	const [questionList, setQuestionList] = useState([]);
@@ -13,6 +14,8 @@ const CreateSurvey = ({ history }) => {
 	const [questionError, setQuestionError] = useState('');
 
 	const dispatch = useDispatch();
+
+	const navigate = useNavigate();
 
 	const handleInputChange = (e) => {
 		const { name, value } = e.target;
@@ -104,7 +107,7 @@ const CreateSurvey = ({ history }) => {
 	}
 
 	const redirectToSurveyPage = () => {
-		history.push("/");
+		navigate("/");
 	}
 
 	return (
