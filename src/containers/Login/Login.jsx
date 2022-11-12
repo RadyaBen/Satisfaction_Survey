@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 import {
 	ADMIN_LOGIN_USERNAME,
@@ -17,12 +18,14 @@ import { login } from '../../redux/actions/authentication';
 
 import './Login.css';
 
-const Login = ({ history }) => {
+const Login = () => {
 	const [inputValues, setInputValues] = useState({ email: '', password: '' });
 	const [formErrors, setFormErrors] = useState({ emailError: '', passwordError: '' });
 	const [authenticationError, setAuthenticationError] = useState('');
 
 	const dispatch = useDispatch();
+
+	const navigate = useNavigate();
 
 	const handleInputChange = ({ target }) => {
 		const { name, value } = target;
@@ -67,7 +70,7 @@ const Login = ({ history }) => {
 				isAdmin: inputValues.email === ADMIN_LOGIN_USERNAME
 			}))
 
-			history.push("/");
+			navigate("/");
 			return true;
 		}
 	};

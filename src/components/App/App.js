@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container } from 'reactstrap';
-import PrivateRoute from '../PrivateRoute';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import PrivateRoutes from '../PrivateRoutes';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import Header from '../Header';
 import Login from '../../containers/Login';
@@ -19,15 +19,17 @@ const App = () => {
 					<Header />
 				</Container>
 				<Container>
-					<Switch>
-						<PrivateRoute path='/' exact component={SurveyList} />
-						<Route path='/login' exact component={Login} />
-						<PrivateRoute path='/createSurvey/' exact component={CreateSurvey} />
-						<PrivateRoute path='/survey/:id' exact component={Survey} />
-						<PrivateRoute path='/surveyResults/' exact component={SurveyResults} />
-						<PrivateRoute path='/surveyAnswers/:id' exact component={ViewAnswers} />
-						<Route render={() => <h1 style={{ color: 'red', textAlign: 'center' }}>The page wasn't found - 404</h1>} />
-					</Switch>
+					<Routes>
+						<Route path='/login' element={<Login />} />
+						<Route element={<PrivateRoutes />}>
+							<Route path='/' element={<SurveyList />} />
+							<Route path='/createSurvey/' element={<CreateSurvey />} />
+							<Route path='/survey/:id' element={<Survey />} />
+							<Route path='/surveyResults/' element={<SurveyResults />} />
+							<Route path='/surveyAnswers/:id' element={<ViewAnswers />} />
+						</Route>
+						<Route path='*' element={<h1 style={{ color: 'red', textAlign: 'center' }}>The page wasn't found - 404</h1>} />
+					</Routes>
 				</Container>
 			</div>
 		</Router>
