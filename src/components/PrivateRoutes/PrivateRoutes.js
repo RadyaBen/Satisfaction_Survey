@@ -1,11 +1,9 @@
-import React from 'react';
+import { useSelector } from 'react-redux';
 import { Navigate, Outlet } from 'react-router-dom';
-import { connect } from 'react-redux';
 
-const PrivateRoutes = ({
-	user,
-	redirectPath = '/login',
-}) => {
+const PrivateRoutes = ({ redirectPath = '/login' }) => {
+	const { user } = useSelector(state => state.authentication);
+
 	return (
 		user
 			? <Outlet />
@@ -16,10 +14,4 @@ const PrivateRoutes = ({
 	);
 };
 
-const mapStateToProps = (state) => {
-	return {
-		user: state.authentication.user
-	};
-}
-
-export default connect(mapStateToProps)(PrivateRoutes);
+export default PrivateRoutes;
