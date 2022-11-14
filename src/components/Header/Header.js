@@ -1,55 +1,48 @@
-import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
 
 import { logout } from '../../redux/actions/authentication';
+
 import './Header.css';
 
-const Header = ({ isUserLoggedIn, isUserAdmin, logout }) => {
-    return (
-        <div className="header">
-            <h3 className="header-title">
-                <Link to='/'>
-                    Satisfaction Survey
-                </Link>
-            </h3>
-            <ul className="header-list">
-                { isUserLoggedIn &&
-                    <li>
-                        <Link to='/'>Survey List</Link>
-                    </li>
-                }
-                 { isUserAdmin &&
-                    <li>
-                        <Link to='/createSurvey'>Create Survey</Link>
-                    </li>
-                }
-                 { isUserAdmin &&
-                    <li>
-                        <Link to='/surveyResults'>Survey Results</Link>
-                    </li>
-                }
-                { isUserLoggedIn &&
-                    <li>
-                        <Link to='/login' onClick={logout}>Logout</Link>
-                    </li>
-                }
-            </ul>
-        </div>
-    );
+const Header = () => {
+	const isLoggedIn = useSelector(state => !!state.authentication.user);
+	const isAdmin = useSelector(state =>
+		state.authentication.user && state.authentication.user.isAdmin
+	);
+	const dispatch = useDispatch();
+
+	return (
+		<div className="header">
+			<h3 className="header-title">
+				<Link to='/'>
+					Satisfaction Survey
+				</Link>
+			</h3>
+			<ul className="header-list">
+				{isLoggedIn &&
+					<li>
+						<Link to='/'>Survey List</Link>
+					</li>
+				}
+				{isAdmin &&
+					<li>
+						<Link to='/createSurvey'>Create Survey</Link>
+					</li>
+				}
+				{isAdmin &&
+					<li>
+						<Link to='/surveyResults'>Survey Results</Link>
+					</li>
+				}
+				{isLoggedIn &&
+					<li>
+						<Link to='/login' onClick={() => dispatch(logout())}>Logout</Link>
+					</li>
+				}
+			</ul>
+		</div>
+	);
 };
 
-const mapStateToProps = (state) => {
-	return {
-		isUserLoggedIn: !!state.authentication.user,
-        isUserAdmin: state.authentication.user && state.authentication.user.isAdmin
-	};
-}
-
-const mapDispatchToProps = (dispatch) => {
-	return {
-		logout: () => dispatch(logout()),
-	};
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+export default Header;
