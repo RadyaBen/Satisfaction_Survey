@@ -8,8 +8,9 @@ import {
 	Paper,
 	Typography
 } from '@material-ui/core';
-
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+
+import { useStyles } from './styles';
 
 const ViewAnswers = () => {
 	const [questionsAnswersList, setQuestionsAnswersList] = useState([]);
@@ -18,6 +19,8 @@ const ViewAnswers = () => {
 
 	const navigate = useNavigate();
 	const { id } = useParams();
+
+	const classes = useStyles();
 
 	useEffect(() => {
 		const surveyResult = results.find(surveyResult => surveyResult.surveyId === id);
@@ -32,24 +35,25 @@ const ViewAnswers = () => {
 	return (
 		<>
 			<Paper elevation={10}>
-				<Box sx={{ flexGrow: 1 }}>
+				<Box className={classes.container}>
 					<Grid container spacing={3}>
 						{questionsAnswersList?.answers?.map(itemList => (
 							<Grid
 								key={itemList.id}
-								item
+								className={classes.item}
 								xs={12} sm={6} md={4} lg={4} xl={4}
+								item
 							>
-								<Paper elevation={3}>
-									<Typography component={'div'}>
+								<Paper className={classes.paper} elevation={4}>
+									<Typography className={classes.textTitle} component={'div'}>
 										Question:
-									<Typography>
+										<Typography className={classes.text}>
 											{itemList.question.question}
 										</Typography>
 									</Typography>
-									<Typography component={'div'}>
+									<Typography className={classes.textTitle} component={'div'}>
 										Answer:
-									<Typography>
+										<Typography className={classes.text}>
 											{itemList.answer}
 										</Typography>
 									</Typography>
@@ -63,9 +67,9 @@ const ViewAnswers = () => {
 				<Button
 					size='large'
 					color='primary'
-					variant='outlined'
-					startIcon={<ArrowBackIcon />}
+					className={classes.button}
 					onClick={redirectToSurveyResults}
+					startIcon={<ArrowBackIcon />}
 				>
 					Back to survey results
 				</Button>
