@@ -22,7 +22,6 @@ const Survey = () => {
 		const survey = surveyList.find((survey) => survey.id === id);
 		const answers = survey.questionList.map((question) => {
 			return {
-				surveyId: id,
 				id: question.id,
 				question,
 				answer: null,
@@ -61,9 +60,10 @@ const Survey = () => {
 		
 		for (const key of keys) {
 			dispatch(saveSurveyResult({
+				surveyId: id,
 				answers: answers,
 				username: list[key].createdBy,
-				createDate: list[key].createDate
+				createDate: list[key].createDate,
 			}));
 		}
 
